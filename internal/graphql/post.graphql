@@ -1,0 +1,22 @@
+type Post {
+    _id: ID!
+    title: String!
+    excerpt: String
+    text: String!
+    image: String
+    slug: String!
+    is_archived: Boolean!
+    is_updated: Boolean!
+    is_published: Boolean!
+    created_at: Time!
+    published_at: Time
+    updated_at: Time
+}
+
+input PostInput {
+    title: String!
+    excerpt: String
+    text: String!
+    image: String
+    slug: String
+}

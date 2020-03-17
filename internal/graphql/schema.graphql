@@ -1,3 +1,7 @@
 type Query {
-    hello: String!
+    posts: [Post]!
+}
+
+type Mutation {
+    createPost(input: PostInput!): Post
 }

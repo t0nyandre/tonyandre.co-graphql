@@ -8,6 +8,7 @@ import (
 
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/postgres"
+	"github.com/t0nyandre/go-graphql/internal/model"
 )
 
 func ConnectDB() (*gorm.DB, error) {
@@ -21,6 +22,8 @@ func ConnectDB() (*gorm.DB, error) {
 		time.Sleep(time.Duration(5) * time.Second)
 		return ConnectDB()
 	}
+
+	db.AutoMigrate(&model.Post{})
 
 	log.Printf("Database successfully connected")
 	return db, nil
