@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"fmt"
 	"log"
 	"net/http"
@@ -12,11 +13,14 @@ import (
 	"github.com/graph-gophers/graphql-go/relay"
 	"github.com/joho/godotenv"
 	gql "github.com/mattdamon108/gqlmerge/lib"
+	"github.com/t0nyandre/go-graphql/internal/handler"
 	"github.com/t0nyandre/go-graphql/internal/resolver"
+	"github.com/t0nyandre/go-graphql/internal/service"
+	"github.com/t0nyandre/go-graphql/internal/storage/postgres"
 )
 
 func init() {
-	if err := godotenv.Load("internal/config/.env"); err != nil {
+	if err := godotenv.Load("config/env/.env"); err != nil {
 		log.Fatalf("Could not find any .env files: %v", err)
 	}
 }
@@ -25,13 +29,23 @@ func main() {
 	opts := []graphql.SchemaOpt{graphql.UseFieldResolvers()}
 	schema := graphql.MustParseSchema(*gql.Merge(" ", "internal/graphql"), &resolver.Resolver{}, opts...)
 
+	db, err := postgres.ConnectDB()
+	if err != nil {
+		log.Fatalf("Unable to connect to database: %s", err)
+	}
+
+	ctx := context.Background()
+	postService := service.NewPostService(db)
+
+	ctx = context.WithValue(ctx, "postService", postService)
+
 	r := chi.NewRouter()
 	cors := cors.New(cors.Options{
 		AllowedOrigins: []string{"*"},
 	})
 
 	r.Use(cors.Handler)
-	r.Handle("/query", &relay.Handler{Schema: schema})
+	r.Handle("/query", handler.AddContext(ctx, &relay.Handler{Schema: schema}))
 
 	fmt.Printf("GraphQL is listening for queries using: %s", os.Getenv("APP_URL"))
 	if err := http.ListenAndServe(fmt.Sprintf("%s", os.Getenv("APP_URL")), r); err != nil {
