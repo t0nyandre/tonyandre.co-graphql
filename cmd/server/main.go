@@ -12,8 +12,7 @@ import (
 	"github.com/graph-gophers/graphql-go/relay"
 	"github.com/joho/godotenv"
 	gql "github.com/mattdamon108/gqlmerge/lib"
-	"github.com/t0nyandre/go-graphql/internal/resolvers/mutation"
-	"github.com/t0nyandre/go-graphql/internal/resolvers/query"
+	"github.com/t0nyandre/go-graphql/internal/resolver"
 )
 
 func init() {
@@ -22,14 +21,9 @@ func init() {
 	}
 }
 
-type Resolver struct {
-	*mutation.Mutation
-	*query.Query
-}
-
 func main() {
 	opts := []graphql.SchemaOpt{graphql.UseFieldResolvers()}
-	schema := graphql.MustParseSchema(*gql.Merge(" ", "internal/graphql"), &Resolver{}, opts...)
+	schema := graphql.MustParseSchema(*gql.Merge(" ", "internal/graphql"), &resolver.Resolver{}, opts...)
 
 	r := chi.NewRouter()
 	cors := cors.New(cors.Options{
