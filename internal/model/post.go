@@ -24,7 +24,8 @@ func (post *Post) IsArchived() bool {
 }
 
 func (post *Post) IsUpdated() bool {
-	if post.UpdatedAt != nil {
+	uat := *post.UpdatedAt
+	if uat != "" {
 		return true
 	}
 	return false

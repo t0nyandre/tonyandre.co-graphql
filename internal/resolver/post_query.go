@@ -17,3 +17,11 @@ func (*Resolver) Posts(ctx context.Context) ([]*postResolver, error) {
 	}
 	return allPosts, nil
 }
+
+func (*Resolver) Post(ctx context.Context, args *struct{ PostId string }) (*postResolver, error) {
+	post, err := ctx.Value("postService").(*service.PostService).GetPost(args.PostId)
+	if err != nil {
+		return nil, err
+	}
+	return &postResolver{post}, nil
+}

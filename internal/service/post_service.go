@@ -32,3 +32,11 @@ func (s *PostService) AllPosts() ([]*model.Post, error) {
 	}
 	return posts, nil
 }
+
+func (s *PostService) GetPost(id string) (*model.Post, error) {
+	post := &model.Post{ID: id}
+	if err := s.db.Where(post).First(&post).Error; err != nil {
+		return nil, err
+	}
+	return post, nil
+}
