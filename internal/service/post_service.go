@@ -1,16 +1,18 @@
 package service
 
 import (
+	"github.com/go-redis/redis"
 	"github.com/jinzhu/gorm"
 	"github.com/lithammer/shortuuid"
 	"github.com/t0nyandre/go-graphql/internal/model"
 )
 
 type PostService struct {
-	db *gorm.DB
+	db    *gorm.DB
+	store *redis.Client
 }
 
-func NewPostService(db *gorm.DB) *PostService {
+func NewPostService(db *gorm.DB, store *redis.Client) *PostService {
 	return &PostService{db: db}
 }
 

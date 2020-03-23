@@ -8,14 +8,14 @@ import (
 )
 
 type User struct {
-	ID             string  `json:"_id,omitempty"`
-	FirstName      string  `json:"first_name,omitempty" db:"first_name"`
-	LastName       *string `json:"last_name,omitempty" db:"last_name"`
-	Email          string  `json:"email,omitempty"`
-	HashedPassword string  `json:"password,omitempty" db:"hashed_password"`
-	Confirmed      bool    `json:"confirmed,omitempty"`
-	CreatedAt      string  `json:"created_at,omitempty" db:"created_at"`
-	UpdatedAt      *string `json:"updated_at,omitempty" db:"updated_at"`
+	ID        string  `json:"_id,omitempty"`
+	FirstName string  `json:"first_name,omitempty" db:"first_name"`
+	LastName  *string `json:"last_name,omitempty" db:"last_name"`
+	Email     string  `json:"email,omitempty"`
+	Password  string  `json:"password,omitempty"`
+	Confirmed bool    `json:"confirmed,omitempty"`
+	CreatedAt string  `json:"created_at,omitempty" db:"created_at"`
+	UpdatedAt *string `json:"updated_at,omitempty" db:"updated_at"`
 }
 
 func (user *User) HashPassword() string {
@@ -27,7 +27,7 @@ func (user *User) HashPassword() string {
 		KeyLength:   32,
 	}
 
-	hash, err := argon2id.CreateHash(user.HashedPassword, &customParams)
+	hash, err := argon2id.CreateHash(user.Password, &customParams)
 	if err != nil {
 		panic(err.Error())
 	}
@@ -36,7 +36,7 @@ func (user *User) HashPassword() string {
 }
 
 func (user *User) VerifyPassword(password string) bool {
-	match, err := argon2id.ComparePasswordAndHash(password, user.HashedPassword)
+	match, err := argon2id.ComparePasswordAndHash(password, user.Password)
 	if err != nil {
 		return false
 	}
@@ -44,9 +44,13 @@ func (user *User) VerifyPassword(password string) bool {
 	return match
 }
 
+func (user *User) IsUserConfirmed() bool {
+	return user.Confirmed
+}
+
 func (user *User) BeforeCreate(scope *gorm.Scope) error {
 	t := time.Now()
-	scope.SetColumn("HashedPassword", user.HashPassword())
+	scope.SetColumn("Password", user.HashPassword())
 	scope.SetColumn("CreatedAt", t.Format(time.RFC822Z))
 	scope.SetColumn("Confirmed", false)
 	return nil

@@ -3,9 +3,10 @@ module github.com/t0nyandre/go-graphql
 go 1.14
 
 require (
-	github.com/alexedwards/argon2id v0.0.0-20190612080829-01a59b2b8802 // indirect
+	github.com/alexedwards/argon2id v0.0.0-20190612080829-01a59b2b8802
 	github.com/go-chi/chi v4.0.3+incompatible // indirect
 	github.com/go-chi/cors v1.0.1 // indirect
+	github.com/go-redis/redis v6.15.7+incompatible
 	github.com/google/uuid v1.1.1 // indirect
 	github.com/gosimple/slug v1.9.0
 	github.com/graph-gophers/graphql-go v0.0.0-20200309224638-dae41bde9ef9

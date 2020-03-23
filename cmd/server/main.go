@@ -17,6 +17,7 @@ import (
 	"github.com/t0nyandre/go-graphql/internal/resolver"
 	"github.com/t0nyandre/go-graphql/internal/service"
 	"github.com/t0nyandre/go-graphql/internal/storage/postgres"
+	"github.com/t0nyandre/go-graphql/internal/storage/redis"
 )
 
 func init() {
@@ -34,10 +35,17 @@ func main() {
 		log.Fatalf("Unable to connect to database: %s", err)
 	}
 
+	store, err := redis.OpenRedis()
+	if err != nil {
+		log.Fatalf("Unable to connect to redis: %s", err)
+	}
+
 	ctx := context.Background()
-	postService := service.NewPostService(db)
+	postService := service.NewPostService(db, store)
+	userService := service.NewUserService(db, store)
 
 	ctx = context.WithValue(ctx, "postService", postService)
+	ctx = context.WithValue(ctx, "userService", userService)
 
 	r := chi.NewRouter()
 	cors := cors.New(cors.Options{
