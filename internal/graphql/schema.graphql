@@ -5,4 +5,6 @@ type Query {
 
 type Mutation {
     createPost(input: PostInput!): Post
+    register(input: UserInput!): User
+    confirmUser(token: String!): Boolean!
 }

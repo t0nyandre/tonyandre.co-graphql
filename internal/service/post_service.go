@@ -13,7 +13,10 @@ type PostService struct {
 }
 
 func NewPostService(db *gorm.DB, store *redis.Client) *PostService {
-	return &PostService{db: db}
+	return &PostService{
+		db:    db,
+		store: store,
+	}
 }
 
 func (s *PostService) CreatePost(post *model.Post) (*model.Post, error) {

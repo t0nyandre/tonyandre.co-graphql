@@ -7,16 +7,16 @@ import (
 )
 
 type Post struct {
-	ID          string  `json:"_id,omitempty"`
+	ID          string  `json:"_id,omitempty" gorm:"unique,not null"`
 	Title       string  `json:"title,omitempty"`
 	Excerpt     *string `json:"excerpt,omitempty"`
 	Text        string  `json:"text,omitempty"`
 	Image       *string `json:"image,omitempty"`
-	Slug        string  `json:"slug,omitempty"`
-	Archived    bool    `json:"is_archived,omitempty" db:"archived"`
-	CreatedAt   string  `json:"created_at,omitempty" db:"created_at"`
-	PublishedAt *string `json:"published_at,omitempty" db:"published_at"`
-	UpdatedAt   *string `json:"updated_at,omitempty" db:"updated_at"`
+	Slug        string  `json:"slug,omitempty" gorm:"unique,not null"`
+	Archived    bool    `json:"is_archived,omitempty"`
+	CreatedAt   string  `json:"created_at,omitempty"`
+	PublishedAt *string `json:"published_at,omitempty"`
+	UpdatedAt   *string `json:"updated_at,omitempty"`
 }
 
 func (post *Post) IsArchived() bool {

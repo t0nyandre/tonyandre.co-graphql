@@ -8,14 +8,14 @@ import (
 )
 
 type User struct {
-	ID        string  `json:"_id,omitempty"`
-	FirstName string  `json:"first_name,omitempty" db:"first_name"`
-	LastName  *string `json:"last_name,omitempty" db:"last_name"`
-	Email     string  `json:"email,omitempty"`
-	Password  string  `json:"password,omitempty"`
+	ID        string  `json:"_id,omitempty" gorm:"unique,not null"`
+	FirstName string  `json:"first_name,omitempty"`
+	LastName  *string `json:"last_name,omitempty"`
+	Email     string  `json:"email,omitempty" gorm:"unique,not null"`
+	Password  string  `json:"password,omitempty gorm:"not null"`
 	Confirmed bool    `json:"confirmed,omitempty"`
-	CreatedAt string  `json:"created_at,omitempty" db:"created_at"`
-	UpdatedAt *string `json:"updated_at,omitempty" db:"updated_at"`
+	CreatedAt string  `json:"created_at,omitempty"`
+	UpdatedAt *string `json:"updated_at,omitempty"`
 }
 
 func (user *User) HashPassword() string {
@@ -48,11 +48,18 @@ func (user *User) IsUserConfirmed() bool {
 	return user.Confirmed
 }
 
+func (user *User) IsUpdated() bool {
+	uat := *user.UpdatedAt
+	if uat != "" {
+		return true
+	}
+	return false
+}
+
 func (user *User) BeforeCreate(scope *gorm.Scope) error {
 	t := time.Now()
 	scope.SetColumn("Password", user.HashPassword())
 	scope.SetColumn("CreatedAt", t.Format(time.RFC822Z))
-	scope.SetColumn("Confirmed", false)
 	return nil
 }
 
