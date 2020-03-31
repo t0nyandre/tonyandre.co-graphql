@@ -8,18 +8,16 @@ import (
 )
 
 type UserInput struct {
-	FirstName string
-	LastName  *string
-	Email     string
-	Password  string
+	Username string
+	Email    string
+	Password string
 }
 
 func (*Resolver) Register(ctx context.Context, args *struct{ Input UserInput }) (*userResolver, error) {
 	user := &model.User{
-		FirstName: args.Input.FirstName,
-		LastName:  args.Input.LastName,
-		Email:     args.Input.Email,
-		Password:  args.Input.Password,
+		Username: args.Input.Username,
+		Email:    args.Input.Email,
+		Password: args.Input.Password,
 	}
 
 	user, err := ctx.Value("userService").(*service.UserService).CreateUser(user)

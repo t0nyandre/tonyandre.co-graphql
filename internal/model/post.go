@@ -7,16 +7,17 @@ import (
 )
 
 type Post struct {
-	ID          string  `json:"_id,omitempty" gorm:"unique,not null"`
-	Title       string  `json:"title,omitempty"`
-	Excerpt     *string `json:"excerpt,omitempty"`
-	Text        string  `json:"text,omitempty"`
-	Image       *string `json:"image,omitempty"`
-	Slug        string  `json:"slug,omitempty" gorm:"unique,not null"`
-	Archived    bool    `json:"is_archived,omitempty"`
-	CreatedAt   string  `json:"created_at,omitempty"`
-	PublishedAt *string `json:"published_at,omitempty"`
-	UpdatedAt   *string `json:"updated_at,omitempty"`
+	ID          string     `json:"_id,omitempty" gorm:"type:varchar(25);unique;not null"`
+	Title       string     `json:"title,omitempty" gorm:"type:varchar(125);not null"`
+	Excerpt     *string    `json:"excerpt,omitempty"`
+	Text        string     `json:"text,omitempty" gorm:"not null"`
+	Image       *string    `json:"image,omitempty"`
+	Slug        string     `json:"slug,omitempty" gorm:"type:varchar(125);unique;not null"`
+	Published   bool       `json:"is_published,omitempty" gorm:"default:false"`
+	Archived    bool       `json:"is_archived,omitempty" gorm:"default:false"`
+	CreatedAt   time.Time  `json:"created_at,omitempty"`
+	PublishedAt *time.Time `json:"published_at,omitempty"`
+	UpdatedAt   *time.Time `json:"updated_at,omitempty"`
 }
 
 func (post *Post) IsArchived() bool {
@@ -24,18 +25,14 @@ func (post *Post) IsArchived() bool {
 }
 
 func (post *Post) IsUpdated() bool {
-	uat := *post.UpdatedAt
-	if uat != "" {
+	if post.UpdatedAt != &post.CreatedAt {
 		return true
 	}
 	return false
 }
 
 func (post *Post) IsPublished() bool {
-	if post.PublishedAt != nil {
-		return true
-	}
-	return false
+	return post.Published
 }
 
 func (post *Post) BeforeCreate(scope *gorm.Scope) error {

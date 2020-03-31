@@ -8,14 +8,14 @@ import (
 )
 
 type User struct {
-	ID        string  `json:"_id,omitempty" gorm:"unique,not null"`
-	FirstName string  `json:"first_name,omitempty"`
-	LastName  *string `json:"last_name,omitempty"`
-	Email     string  `json:"email,omitempty" gorm:"unique,not null"`
-	Password  string  `json:"password,omitempty gorm:"not null"`
-	Confirmed bool    `json:"confirmed,omitempty"`
-	CreatedAt string  `json:"created_at,omitempty"`
-	UpdatedAt *string `json:"updated_at,omitempty"`
+	ID        string     `json:"_id,omitempty" gorm:"type:varchar(25);unique;not null"`
+	Username  string     `json:"username,omitempty" gorm:"type:varchar(30);unique;not null"`
+	Email     string     `json:"email,omitempty" gorm:"type:varchar(200);unique;not null"`
+	Password  string     `json:"password,omitempty" gorm:"not null"`
+	Confirmed bool       `json:"confirmed,omitempty" gorm:"default:false"`
+	Disabled  bool       `json:"disabled,omitempty" gorm:"default:false"`
+	CreatedAt time.Time  `json:"created_at,omitempty"`
+	UpdatedAt *time.Time `json:"updated_at,omitempty"`
 }
 
 func (user *User) HashPassword() string {
@@ -50,7 +50,7 @@ func (user *User) IsUserConfirmed() bool {
 
 func (user *User) IsUpdated() bool {
 	uat := *user.UpdatedAt
-	if uat != "" {
+	if uat != user.CreatedAt {
 		return true
 	}
 	return false

@@ -67,3 +67,10 @@ func (s *UserService) ConfirmUser(token string) (bool, error) {
 
 	return user.Confirmed, nil
 }
+
+func (s *UserService) GetUser(user *model.User) (*model.User, error) {
+	if err := s.db.Where("username = ?", user.Username).First(&user).Error; err != nil {
+		return nil, err
+	}
+	return user, nil
+}

@@ -1,8 +1,6 @@
 package resolver
 
 import (
-	"time"
-
 	"github.com/graph-gophers/graphql-go"
 	"github.com/t0nyandre/go-graphql/internal/model"
 )
@@ -48,21 +46,13 @@ func (r *postResolver) IsPublished() bool {
 }
 
 func (r *postResolver) CreatedAt() graphql.Time {
-	date, err := time.Parse(time.RFC822Z, r.p.CreatedAt)
-	if err != nil {
-		panic(err)
-	}
-	return graphql.Time{Time: date}
+	return graphql.Time{Time: r.p.CreatedAt}
 }
 
 func (r *postResolver) PublishedAt() *graphql.Time {
 	if r.p.IsPublished() {
 		pat := *r.p.PublishedAt
-		date, err := time.Parse(time.RFC822Z, pat)
-		if err != nil {
-			panic(err)
-		}
-		return &graphql.Time{Time: date}
+		return &graphql.Time{Time: pat}
 	}
 	return nil
 }
@@ -70,11 +60,7 @@ func (r *postResolver) PublishedAt() *graphql.Time {
 func (r *postResolver) UpdatedAt() *graphql.Time {
 	if r.p.IsUpdated() {
 		uat := *r.p.UpdatedAt
-		date, err := time.Parse(time.RFC822Z, uat)
-		if err != nil {
-			panic(err)
-		}
-		return &graphql.Time{Time: date}
+		return &graphql.Time{Time: uat}
 	}
 	return nil
 }

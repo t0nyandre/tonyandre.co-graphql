@@ -23,7 +23,7 @@ func ConnectDB() (*gorm.DB, error) {
 		return ConnectDB()
 	}
 
-	db.AutoMigrate(&model.Post{})
+	db.AutoMigrate(&model.User{}, &model.Post{})
 
 	log.Printf("Database successfully connected")
 	return db, nil
