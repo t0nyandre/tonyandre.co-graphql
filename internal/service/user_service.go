@@ -69,7 +69,7 @@ func (s *UserService) ConfirmUser(token string) (bool, error) {
 }
 
 func (s *UserService) FindUser(user *model.User) (*model.User, error) {
-	if err := s.db.Where(user).First(&user).Error; err != nil {
+	if err := s.db.Preload("Profile").Where(user).First(&user).Error; err != nil {
 		return nil, err
 	}
 	return user, nil

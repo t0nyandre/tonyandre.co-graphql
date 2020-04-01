@@ -1,5 +1,9 @@
 type User {
     _id: ID!
+    first_name: String
+    last_name: String
+    avatar: String
+    posts: [Post]!
     username: String!
     email: String!
     is_confirmed: Boolean!
@@ -9,13 +13,13 @@ type User {
     updated_at: Time
 }
 
+input FindUserInput {
+    email: String
+    username: String
+}
+
 input UserInput {
     username: String!
     email: String!
     password: String!
-}
-
-input FindUserInput {
-    email: String
-    username: String
 }

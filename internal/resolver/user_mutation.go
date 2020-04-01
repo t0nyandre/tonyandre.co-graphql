@@ -20,7 +20,14 @@ func (*Resolver) Register(ctx context.Context, args *struct{ Input UserInput }) 
 		Password: args.Input.Password,
 	}
 
-	user, err := ctx.Value("userService").(*service.UserService).CreateUser(user)
+	profile, err := ctx.Value("profileService").(*service.ProfileService).CreateAuthor()
+	if err != nil {
+		return nil, err
+	}
+
+	user.Profile = *profile
+
+	user, err = ctx.Value("userService").(*service.UserService).CreateUser(user)
 	if err != nil {
 		return nil, err
 	}

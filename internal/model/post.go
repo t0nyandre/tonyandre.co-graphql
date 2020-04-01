@@ -8,6 +8,7 @@ import (
 
 type Post struct {
 	ID          string     `json:"_id,omitempty" gorm:"type:varchar(25);unique;not null"`
+	ProfileID   string     `json:"profile_id,omitempty" gorm:"type:varchar(25);not null"`
 	Title       string     `json:"title,omitempty" gorm:"type:varchar(125);not null"`
 	Excerpt     *string    `json:"excerpt,omitempty"`
 	Text        string     `json:"text,omitempty" gorm:"not null"`

@@ -43,9 +43,13 @@ func main() {
 	ctx := context.Background()
 	postService := service.NewPostService(db, store)
 	userService := service.NewUserService(db, store)
+	profileService := service.NewProfileService(db)
+	authService := service.NewAuthService()
 
 	ctx = context.WithValue(ctx, "postService", postService)
 	ctx = context.WithValue(ctx, "userService", userService)
+	ctx = context.WithValue(ctx, "profileService", profileService)
+	ctx = context.WithValue(ctx, "authService", authService)
 
 	r := chi.NewRouter()
 	cors := cors.New(cors.Options{
@@ -53,7 +57,7 @@ func main() {
 	})
 
 	r.Use(cors.Handler)
-	r.Handle("/query", handler.AddContext(ctx, &relay.Handler{Schema: schema}))
+	r.Handle("/query", handler.AddContext(ctx, handler.Authenticate(&relay.Handler{Schema: schema})))
 
 	fmt.Printf("GraphQL is listening for queries using: %s", os.Getenv("APP_URL"))
 	if err := http.ListenAndServe(fmt.Sprintf("%s", os.Getenv("APP_URL")), r); err != nil {

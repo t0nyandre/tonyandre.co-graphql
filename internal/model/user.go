@@ -9,6 +9,8 @@ import (
 
 type User struct {
 	ID        string     `json:"_id,omitempty" gorm:"type:varchar(25);unique;not null"`
+	Profile   Profile    `gorm:"auto_preload"`
+	ProfileID string     `json:"profile_id,omitempty" gorm:"type:varchar(25);not null"`
 	Username  string     `json:"username,omitempty" gorm:"type:varchar(30);unique;not null"`
 	Email     string     `json:"email,omitempty" gorm:"type:varchar(200);unique;not null"`
 	Password  string     `json:"password,omitempty" gorm:"not null"`

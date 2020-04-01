@@ -10,7 +10,27 @@ type userResolver struct {
 }
 
 func (r *userResolver) ID() graphql.ID {
-	return graphql.ID(r.u.ID)
+	return graphql.ID(r.u.Profile.ID)
+}
+
+func (r *userResolver) FirstName() *string {
+	return r.u.Profile.FirstName
+}
+
+func (r *userResolver) LastName() *string {
+	return r.u.Profile.LastName
+}
+
+func (r *userResolver) Avatar() *string {
+	return r.u.Profile.Avatar
+}
+
+func (r *userResolver) Posts() []*postResolver {
+	allPosts := make([]*postResolver, 0)
+	for _, post := range r.u.Profile.Posts {
+		allPosts = append(allPosts, &postResolver{post})
+	}
+	return allPosts
 }
 
 func (r *userResolver) Username() string {
