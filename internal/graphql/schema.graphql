@@ -1,7 +1,7 @@
 type Query {
     posts: [Post]!
     post(postId: String!): Post
-    user(username: String!): User
+    user(input: FindUserInput!): User
 }
 
 type Mutation {
