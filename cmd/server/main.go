@@ -44,7 +44,7 @@ func main() {
 	postService := service.NewPostService(db, store)
 	userService := service.NewUserService(db, store)
 	profileService := service.NewProfileService(db)
-	authService := service.NewAuthService()
+	authService := service.NewAuthService(store)
 
 	ctx = context.WithValue(ctx, "postService", postService)
 	ctx = context.WithValue(ctx, "userService", userService)

@@ -7,5 +7,7 @@ type Query {
 type Mutation {
     createPost(input: PostInput!): Post
     register(input: UserInput!): User
+    login(email: String!, password: String!): Token
+    logout: Boolean!
     confirmUser(token: String!): Boolean!
 }

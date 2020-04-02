@@ -33,8 +33,5 @@ func (*Resolver) User(ctx context.Context, args *struct{ Input FindUserInput }) 
 		return nil, err
 	}
 
-	auth := ctx.Value("is_authorized").(bool)
-
-	fmt.Printf("\nAm I logged in? %t\n", auth)
 	return &userResolver{user}, nil
 }
